@@ -1,0 +1,230 @@
+---
+title: "Bayesian Additive Regression Trees (BART)"
+author: "Michele Sezgin"
+bibliography: "refs.bib"
+nocite: '@*'
+format: 
+  revealjs:
+    theme: [default, presentation_files/custom.scss]
+    slide-number: true
+    logo: presentation_files/images/cmu-scotty-scarf.png
+    html-math-method: mathjax
+editor: source
+---
+
+## What is BART? {.nostretch}
+
+::: {.incremental}
+
+- Bayesian inference + nonparametric sum of trees model
+- Priors regularize trees and generate posteriors
+- Flexibility + inference
+  
+:::
+
+## Model specification
+
+- $T_j$ is a binary tree
+- $x$ are covariates
+- $\mu_{ij}$ is the $i$th terminal node of $T_j$
+- $M_j = \{ \mu_{1j}, \dots, \mu_{ij} \}$ is the set of terminal nodes for $T_j$
+- $g: \mathcal{X} \mapsto \mathcal{Y}$
+
+$$
+Y = \sum_{j = 1}^m g(x; T_j, M_j) + \varepsilon, \hspace{15pt} \varepsilon \sim N(0, \sigma^2)
+$$
+
+## Priors {.smaller}
+
+::: {.incremental}
+
+- $T_j \overset{iid}{\sim} \alpha(1 + d)^{\beta}$
+  + $d \in \mathbb{N}$ is node depth
+  + $\alpha \in (0, 1)$
+  + $\beta \in [0, \infty)$
+  
+| $d$                         | $1$  | $2$  | $3$  | $4$  | $\ge 5$ |
+|-----------------------------|------|------|------|------|---------|
+| $p(\text{terminal} \mid d)$ | 0.05 | 0.55 | 0.28 | 0.09 | 0.03    |
+
+- Uniform prior on choice of split variable
+
+- Uniform prior on discrete set of available split values, given split variable
+
+:::
+
+## Priors  {.smaller}
+
+::: {.incremental}
+
+- $\mu_{ij} \mid T_j \overset{iid}{\sim} N(\mu_{\mu}, \sigma_{\mu}^2)$ 
+  + $\mathbb{E}[Y\mid x] = \sum_{j = 1}^m \mu_{ij} \mid T_j$
+  + $\Rightarrow \mathbb{E}[Y\mid x] \sim N(m\mu_{\mu}, m\sigma_{\mu}^2)$
+  + We want $N(m\mu_{\mu}, m\sigma_{\mu}^2)$ assigning substantial probability to $(y_{\text{min}}, y_{\text{max}})$
+  + $\rightarrow m\mu_{\mu} - k\sqrt{m}\sigma_{\mu} = y_{\text{min}}$
+  + $\rightarrow m\mu_{\mu} + k\sqrt{m}\sigma_{\mu} = y_{\text{max}}$
+  + Shift + scale $Y$ to be in $[-0.5, 0.5]$
+  + $\rightarrow \mu_{ij} \sim N(\mu_{\mu} = 0, \sigma_{\mu}^2 = \Big ( \frac{0.5}{k\sqrt{m}} \Big )^2)$
+  
+:::
+  
+## Priors
+
+::: {.incremental}
+
+- $\sigma^2 \sim \nu\lambda\ /\chi_{\nu}^2$
+  + Pick $\hat{\sigma} = \widehat{\text{sd}}(Y)$ or residual sd of OLS
+  + $\nu \in [3, 10]$
+  + $\lambda$ s.t. $P(\sigma < \hat{\sigma}) = q$
+  + $q \in \{0.75, 0.90, 0.99\}$
+  
+:::
+
+## Posterior Draws
+
+- Gibb's sampling: conditional conjugacy
+- $\sigma \mid T_1, \dots T_m, M_1, \dots, M_m, y$
+  + Draw from Inverse Gamma
+- $(T_j, M_j) \mid T_{(-j)}, M_{(-j)}, \sigma, y$
+  + More difficult
+
+## Drawing $T_j, M_j$
+
+- Define $R_j \equiv y - \sum_{k \neq j} g(x; T_k, M_k)$
+- Now, want: $(T_j, M_j) \mid R_j, \sigma$
+- Note: $p(T_j \mid R_j, \sigma) \propto p(T_j) \int p(R_j \mid M_j, T_j, \sigma)p(R_j \mid T_j, \sigma) dM_j$
+- Then 2 step draw:
+  1. $T_j \mid R_j, \sigma$ using Metropolis-Hastings
+  2. $M_j \mid T_j, R_j, \sigma$ just draw from normal!
+
+  
+## Drawing $T_j$
+
+- Draw of $T_j$ boils down to moves and their associated proposal probabilities
+  1. Growing a terminal node (0.25)
+  2. Pruning a pair of terminal nodes (0.25)
+  3. Changing a nonterminal rule (0.40)
+  4. Swapping a rule between parent and child (0.10)
+  
+## Algorithm:
+
+1. Initialize $m$ single node trees, $\sigma$
+2. For each $T_j$:
+    i) Compute $R_j$
+    ii) Draw new $T_j \mid R_j, \sigma$ proposal based on four moves
+    iii) Draw new $M_j \mid T_j, R_j, \sigma$
+3. Draw new $\sigma$ using full conditional
+4. Repeat until convergence
+
+## BART's Problems
+
+- Cannot adapt to higher order smoothness
+
+- Curse of dimensionality
+
+- Does not scale well
+
+## BART's Problems
+
+- Cannot adapt to higher order smoothness
+
+- Curse of dimensionality
+
+- [Does not scale well]{style="color:gray;"}
+
+## Soft BART (SBART) + Dirichlet ART (DART) {.smaller}
+
+- SBART adapts to smoothness
+  + Each branch node $b$ is given a decision rule: $[x_j \leq C_b]$
+  + soft thresholding: $\psi(x;T,b) = \psi(\frac{x_j - C_b}{\tau_b})$
+    + $\tau_b > 0$ 
+  + Example $\psi(x)$ is expit: $\{1 - \exp(-x)\}^{-1}$
+- DART induces sparsity
+  + Predictor $j$ is selected with probability $s_j$, $s = [s_1, \dots s_p]$
+  + $s \sim \text{Dir}(a/p^\xi, \dots a/p^\xi), \xi \ge 0$
+
+## SBART in Action
+
+![](presentation_files/images/sbart_plots.png){fig-align=center'}
+
+
+## Theorem 2: posterior convergence rate for sparse truth {.smaller}
+
++ If $n\varepsilon_n^2 \to \infty$, $\hspace{5pt} \varepsilon_n \to 0$, $\hspace{5pt} n, p \to \infty$
++ $M$ > 0
++ Let $\Pi_{n,\eta}$ be the Bayesian fractional posterior
+  
+$$\begin{aligned}
+& \Pi_{n,\eta}(\| \hat{f} - f \|_n \ge M\varepsilon_n) \to 0 \hspace{5pt} \text{ as } \hspace{5pt} n,p \to \infty \\
+& \varepsilon_n = n^{-\frac{s}{2s + d}}\log(n)^t + \sqrt{\frac{d\log(p)}{n}} \\
+& t \ge \frac{s(d + 1)}{2s + d}
+\end{aligned}$$
+
+## Review
+
+- BART
+  + Flexibility + interpretability/inference
+
+- SBART
+  + Adapts to higher order smoothness through soft thresholding
+
+- DART
+  + Sparsity-inducing dirichlet prior
+  
+- DART + SBART
+  + Produce near-minimax rates, up to log factor
+
+## References
+
+::: {#refs}
+:::
+
+# Appendix
+
+## Sigma Priors
+
+![](presentation_files/images/bart_sigma.png){fig-align=center'}
+
+## SBART
+
+![](presentation_files/images/sbart_tree.png){fig-align='center'}
+
+## Dirichlet Additive Regression Tree (DART)
+
+- Predictor $j$ is selected with probability $s_j$, $s = [s_1, \dots s_p]$
+
+- $s \sim \text{Dir}(a/p^\xi, \dots a/p^\xi), \xi \ge 0$
+
+- $\frac{a}{a + \lambda_a} \sim \text{Be}(a_a = 0.5, b_a = 1), \hspace{5pt} \lambda_a = p$
+  + infinite density at 0
+  + median p/4
+  + infinite mean
+
+## Theorem 3: posterior convergence rate for additive sparse truth {.smaller}
+
+- Same assumptions
+  + $f = \sum_{v = 1}^V f_v$
+  + Each $f_v$ is $s_v$-smooth and depends only on $d_v$ covariates
+  
+$$\begin{aligned}
+& \Pi_{n,\eta}(\| \hat{f} - f \|_n \ge M\varepsilon_n) \to 0 \hspace{5pt} \text{ as } \hspace{5pt} n,p \to \infty \\
+& \varepsilon_n = \sum_{v = 1}^{V} n^{-\frac{s_v}{2s_v + d_v}}\log(n)^t + \sqrt{\frac{d_v\log(p)}{n}} \\
+& t \ge \max_v \frac{s_v(d_v + 1)}{2s_v + d_v}
+\end{aligned}$$
+
+## Theorem 1: prior concentration for sparse function {.smaller}
+
+- Assuming several conditions on priors and $\psi(1 - \psi)$,
+  + Let $\hat{f} = \sum_{j = 1}^m g(x; T_j, M_j)$
+  + Let $\Pi$ be the prior on $f$
+  + Let $f$ depend on at most $d$ covariates
+  + $A$ and $C$ are constants
+  + For $s$-smooth true $f$
+  
+## Theorem 1: prior concentration for sparse function {.smaller}
+
+$$\begin{aligned}
+& \Pi(\| \hat{f} - f\|_{\infty} \le A \varepsilon_n)  \ge \exp(-Cn \varepsilon_n) \\
+& \varepsilon_n = n^{-\frac{s}{2s + d}}\log(n)^t + \sqrt{\frac{d\log(p)}{n}} \\
+& t \ge \frac{s(d + 1)}{2s + d}
+\end{aligned}$$

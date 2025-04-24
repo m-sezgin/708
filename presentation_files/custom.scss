@@ -1,0 +1,26 @@
+/*-- scss:defaults --*/
+
+$body-bg: #fff !default;
+$body-color: #222 !default;
+$link-color: #42affa !default;
+$input-panel-bg: rgba(233, 236, 239, 0.2) !default;
+$presentation-heading-color: #C41230 !default;
+$presentation-font-smaller: 0.85 !default;
+
+.reveal .slide-logo {
+  display: block;
+  position: fixed;
+  bottom: 5px;
+  right: 12px;
+  height: 85px !important;
+  max-width: unset !important;
+  max-height: unset !important;
+}
+
+.center {
+  text-align: center;
+}
+
+.reveal .slide-number {
+  font-size: 20pt !important;
+}
