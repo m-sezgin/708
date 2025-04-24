@@ -36,8 +36,6 @@ $$
 
 ## Priors {.smaller}
 
-::: {.incremental}
-
 - $T_j \overset{iid}{\sim} \alpha(1 + d)^{\beta}$
   + $d \in \mathbb{N}$ is node depth
   + $\alpha \in (0, 1)$
@@ -50,8 +48,6 @@ $$
 - Uniform prior on choice of split variable
 
 - Uniform prior on discrete set of available split values, given split variable
-
-:::
 
 ## Priors  {.smaller}
 
@@ -90,6 +86,8 @@ $$
 
 ## Drawing $T_j, M_j$
 
+::: {.incremental}
+
 - Define $R_j \equiv y - \sum_{k \neq j} g(x; T_k, M_k)$
 - Now, want: $(T_j, M_j) \mid R_j, \sigma$
 - Note: $p(T_j \mid R_j, \sigma) \propto p(T_j) \int p(R_j \mid M_j, T_j, \sigma)p(R_j \mid T_j, \sigma) dM_j$
@@ -97,8 +95,11 @@ $$
   1. $T_j \mid R_j, \sigma$ using Metropolis-Hastings
   2. $M_j \mid T_j, R_j, \sigma$ just draw from normal!
 
+:::
   
 ## Drawing $T_j$
+
+::: {.incremental}
 
 - Draw of $T_j$ boils down to moves and their associated proposal probabilities
   1. Growing a terminal node (0.25)
@@ -106,7 +107,11 @@ $$
   3. Changing a nonterminal rule (0.40)
   4. Swapping a rule between parent and child (0.10)
   
+:::
+  
 ## Algorithm:
+
+::: {.incremental}
 
 1. Initialize $m$ single node trees, $\sigma$
 2. For each $T_j$:
@@ -116,13 +121,19 @@ $$
 3. Draw new $\sigma$ using full conditional
 4. Repeat until convergence
 
+:::
+
 ## BART's Problems
+
+::: {.incremental}
 
 - Cannot adapt to higher order smoothness
 
 - Curse of dimensionality
 
 - Does not scale well
+
+:::
 
 ## BART's Problems
 

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<script src="presentation_files/libs/clipboard/clipboard.min.js"></script>
-<script src="presentation_files/libs/quarto-html/tabby.min.js"></script>
-<script src="presentation_files/libs/quarto-html/popper.min.js"></script>
-<script src="presentation_files/libs/quarto-html/tippy.umd.min.js"></script>
-<link href="presentation_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="presentation_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="presentation_files/libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<script src="index_files/libs/clipboard/clipboard.min.js"></script>
+<script src="index_files/libs/quarto-html/tabby.min.js"></script>
+<script src="index_files/libs/quarto-html/popper.min.js"></script>
+<script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.6.40">
 
   <meta name="author" content="Michele Sezgin">
@@ -14,8 +14,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="presentation_files/libs/revealjs/dist/reset.css">
-  <link rel="stylesheet" href="presentation_files/libs/revealjs/dist/reveal.css">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/reveal.css">
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -49,11 +49,11 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
-  <link rel="stylesheet" href="presentation_files/libs/revealjs/dist/theme/quarto-24e1168d43819ae34bff7b0be749a08d.css">
-  <link href="presentation_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
-  <link href="presentation_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
-  <link href="presentation_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
-  <link href="presentation_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-24e1168d43819ae34bff7b0be749a08d.css">
+  <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="index_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="index_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
     .reveal div.sourceCode {
       margin: 0;
@@ -183,13 +183,12 @@ Y = \sum_{j = 1}^m g(x; T_j, M_j) + \varepsilon, \hspace{15pt} \varepsilon \sim 
 </section>
 <section id="priors" class="slide level2 smaller">
 <h2>Priors</h2>
-<div>
 <ul>
-<li class="fragment"><span class="math inline">\(T_j \overset{iid}{\sim} \alpha(1 + d)^{\beta}\)</span>
+<li><span class="math inline">\(T_j \overset{iid}{\sim} \alpha(1 + d)^{\beta}\)</span>
 <ul>
-<li class="fragment"><span class="math inline">\(d \in \mathbb{N}\)</span> is node depth</li>
-<li class="fragment"><span class="math inline">\(\alpha \in (0, 1)\)</span></li>
-<li class="fragment"><span class="math inline">\(\beta \in [0, \infty)\)</span></li>
+<li><span class="math inline">\(d \in \mathbb{N}\)</span> is node depth</li>
+<li><span class="math inline">\(\alpha \in (0, 1)\)</span></li>
+<li><span class="math inline">\(\beta \in [0, \infty)\)</span></li>
 </ul></li>
 </ul>
 <table class="caption-top">
@@ -215,10 +214,9 @@ Y = \sum_{j = 1}^m g(x; T_j, M_j) + \varepsilon, \hspace{15pt} \varepsilon \sim 
 </tbody>
 </table>
 <ul>
-<li class="fragment"><p>Uniform prior on choice of split variable</p></li>
-<li class="fragment"><p>Uniform prior on discrete set of available split values, given split variable</p></li>
+<li><p>Uniform prior on choice of split variable</p></li>
+<li><p>Uniform prior on discrete set of available split values, given split variable</p></li>
 </ul>
-</div>
 </section>
 <section id="priors-1" class="slide level2 smaller">
 <h2>Priors</h2>
@@ -267,50 +265,58 @@ Y = \sum_{j = 1}^m g(x; T_j, M_j) + \varepsilon, \hspace{15pt} \varepsilon \sim 
 </section>
 <section id="drawing-t_j-m_j" class="slide level2">
 <h2>Drawing <span class="math inline">\(T_j, M_j\)</span></h2>
+<div>
 <ul>
-<li>Define <span class="math inline">\(R_j \equiv y - \sum_{k \neq j} g(x; T_k, M_k)\)</span></li>
-<li>Now, want: <span class="math inline">\((T_j, M_j) \mid R_j, \sigma\)</span></li>
-<li>Note: <span class="math inline">\(p(T_j \mid R_j, \sigma) \propto p(T_j) \int p(R_j \mid M_j, T_j, \sigma)p(R_j \mid T_j, \sigma) dM_j\)</span></li>
-<li>Then 2 step draw:
+<li class="fragment">Define <span class="math inline">\(R_j \equiv y - \sum_{k \neq j} g(x; T_k, M_k)\)</span></li>
+<li class="fragment">Now, want: <span class="math inline">\((T_j, M_j) \mid R_j, \sigma\)</span></li>
+<li class="fragment">Note: <span class="math inline">\(p(T_j \mid R_j, \sigma) \propto p(T_j) \int p(R_j \mid M_j, T_j, \sigma)p(R_j \mid T_j, \sigma) dM_j\)</span></li>
+<li class="fragment">Then 2 step draw:
 <ol type="1">
-<li><span class="math inline">\(T_j \mid R_j, \sigma\)</span> using Metropolis-Hastings</li>
-<li><span class="math inline">\(M_j \mid T_j, R_j, \sigma\)</span> just draw from normal!</li>
+<li class="fragment"><span class="math inline">\(T_j \mid R_j, \sigma\)</span> using Metropolis-Hastings</li>
+<li class="fragment"><span class="math inline">\(M_j \mid T_j, R_j, \sigma\)</span> just draw from normal!</li>
 </ol></li>
 </ul>
+</div>
 </section>
 <section id="drawing-t_j" class="slide level2">
 <h2>Drawing <span class="math inline">\(T_j\)</span></h2>
+<div>
 <ul>
-<li>Draw of <span class="math inline">\(T_j\)</span> boils down to moves and their associated proposal probabilities
+<li class="fragment">Draw of <span class="math inline">\(T_j\)</span> boils down to moves and their associated proposal probabilities
 <ol type="1">
-<li>Growing a terminal node (0.25)</li>
-<li>Pruning a pair of terminal nodes (0.25)</li>
-<li>Changing a nonterminal rule (0.40)</li>
-<li>Swapping a rule between parent and child (0.10)</li>
+<li class="fragment">Growing a terminal node (0.25)</li>
+<li class="fragment">Pruning a pair of terminal nodes (0.25)</li>
+<li class="fragment">Changing a nonterminal rule (0.40)</li>
+<li class="fragment">Swapping a rule between parent and child (0.10)</li>
 </ol></li>
 </ul>
+</div>
 </section>
 <section id="algorithm" class="slide level2">
 <h2>Algorithm:</h2>
+<div>
 <ol type="1">
-<li>Initialize <span class="math inline">\(m\)</span> single node trees, <span class="math inline">\(\sigma\)</span></li>
-<li>For each <span class="math inline">\(T_j\)</span>:
+<li class="fragment">Initialize <span class="math inline">\(m\)</span> single node trees, <span class="math inline">\(\sigma\)</span></li>
+<li class="fragment">For each <span class="math inline">\(T_j\)</span>:
 <ol type="i">
-<li>Compute <span class="math inline">\(R_j\)</span></li>
-<li>Draw new <span class="math inline">\(T_j \mid R_j, \sigma\)</span> proposal based on four moves</li>
-<li>Draw new <span class="math inline">\(M_j \mid T_j, R_j, \sigma\)</span></li>
+<li class="fragment">Compute <span class="math inline">\(R_j\)</span></li>
+<li class="fragment">Draw new <span class="math inline">\(T_j \mid R_j, \sigma\)</span> proposal based on four moves</li>
+<li class="fragment">Draw new <span class="math inline">\(M_j \mid T_j, R_j, \sigma\)</span></li>
 </ol></li>
-<li>Draw new <span class="math inline">\(\sigma\)</span> using full conditional</li>
-<li>Repeat until convergence</li>
+<li class="fragment">Draw new <span class="math inline">\(\sigma\)</span> using full conditional</li>
+<li class="fragment">Repeat until convergence</li>
 </ol>
+</div>
 </section>
 <section id="barts-problems" class="slide level2">
 <h2>BART’s Problems</h2>
+<div>
 <ul>
-<li><p>Cannot adapt to higher order smoothness</p></li>
-<li><p>Curse of dimensionality</p></li>
-<li><p>Does not scale well</p></li>
+<li class="fragment"><p>Cannot adapt to higher order smoothness</p></li>
+<li class="fragment"><p>Curse of dimensionality</p></li>
+<li class="fragment"><p>Does not scale well</p></li>
 </ul>
+</div>
 </section>
 <section id="barts-problems-1" class="slide level2">
 <h2>BART’s Problems</h2>
@@ -460,19 +466,19 @@ Linero, Antonio R., and Yun Yang. 2018. <span>“Bayesian <span>Regression</span
 </div></div>
 
   <script>window.backupDefine = window.define; window.define = undefined;</script>
-  <script src="presentation_files/libs/revealjs/dist/reveal.js"></script>
+  <script src="index_files/libs/revealjs/dist/reveal.js"></script>
   <!-- reveal.js plugins -->
-  <script src="presentation_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
-  <script src="presentation_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
-  <script src="presentation_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
-  <script src="presentation_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
-  <script src="presentation_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  <script src="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="index_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="index_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="index_files/libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
-  <script src="presentation_files/libs/revealjs/plugin/notes/notes.js"></script>
-  <script src="presentation_files/libs/revealjs/plugin/search/search.js"></script>
-  <script src="presentation_files/libs/revealjs/plugin/zoom/zoom.js"></script>
-  <script src="presentation_files/libs/revealjs/plugin/math/math.js"></script>
+  <script src="index_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="index_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="index_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="index_files/libs/revealjs/plugin/math/math.js"></script>
   <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
 
   <script>
